@@ -1,17 +1,18 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { CSVReader } from 'react-papaparse';
 
-export default class ingest extends Component {
+class ingest extends Component {
     constructor(props) {
         super(props);
         this.fileInput = React.createRef();
-        this.state={'data':null}
+        this.state = { 'data': null }
     }
 
 
-    readfile = (data) => {
-        console.log(data);
-        this.setState({'data':data})
+    readfile = (data) => {        
+       
+        this.props.dispatch({ type:'converted','data': data })
 
 
     }
@@ -29,11 +30,15 @@ export default class ingest extends Component {
                 inputRef={this.fileInput}
                 style={{ display: 'none' }}
                 onError={this.errorHandling}
-                configOptions={{header: true /* Header row support */ }}
+                configOptions={{ header: true /* Header row support */ }}
             />
             <button onClick={this.handleImportOffer}>Import</button>
-            {JSON.stringify(this.state.data)}
         </>;
     }
 
 }
+const mapStateToProps = (state) => {
+    return {data:state.data};
+ }
+export default connect(mapStateToProps)(ingest);
+
